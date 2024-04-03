@@ -36,6 +36,4 @@ Client should enter server IP address and port.
 
 ![ios_client](https://github.com/KirillStolbov/remote_painting/assets/116667638/62839f5b-c40d-4197-8670-1dd9f7f736da)
 
-![macos_server_1](https://github.com/KirillStolbov/remote_painting/assets/116667638/eec4b6df-4f7b-45b2-96d9-6876fbcc04d0)
-
 ![macos_server_2](https://github.com/KirillStolbov/remote_painting/assets/116667638/d92eab87-b130-47ad-8972-99ba55490cec)
