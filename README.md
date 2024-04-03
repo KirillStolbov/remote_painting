@@ -18,7 +18,7 @@ Server should enter his IP address (port will be selected automatically) to star
 
 Client should enter server IP address and port.
 
-![alt text](https://github.com/KirillStolbov/remote_painting/main/docs/images/macos_client_setup.png)
+![alt text](https://github.com/KirillStolbov/remote_painting/docs/images/macos_client_setup.png)
 
 2. Mobile client setup
 
