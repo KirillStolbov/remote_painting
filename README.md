@@ -12,7 +12,7 @@ In this example i have two devices connected to single local area network.
 
 Server should enter his IP address (port will be selected automatically) to start listening to any incoming connection.
 
-![alt text](https://github.com/KirillStolbov/remote_painting/main/docs/images/macos_server_setup.png)
+![macos_server_setup](https://github.com/KirillStolbov/remote_painting/assets/116667638/eab25fb3-0c67-4f50-9320-00616cbbc380)
 
 2. Desktop client setup
 
