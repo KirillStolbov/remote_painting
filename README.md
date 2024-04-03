@@ -18,21 +18,20 @@ Server should enter his IP address (port will be selected automatically) to star
 
 Client should enter server IP address and port.
 
-![alt text](https://github.com/KirillStolbov/remote_painting/docs/images/macos_client_setup.png)
+![macos_client_setup](https://github.com/KirillStolbov/remote_painting/assets/116667638/2853091c-87e1-4da0-93e7-6ff0998e3a03)
 
 2. Mobile client setup
 
 Client should enter server IP address and port.
 
-![alt text](https://github.com/KirillStolbov/remote_painting/main/docs/images/ios_client_setup.jpg)
+![ios_client_setup](https://github.com/KirillStolbov/remote_painting/assets/116667638/e4f0c808-e6d1-462e-94fe-a0e7c103e96c)
 
 3. If everything goes well you will see this :D, and you will be able to draw on the client side and on the server side.
 
-![alt text](https://github.com/KirillStolbov/remote_painting/main/docs/images/macos_client.png)
+![macos_client](https://github.com/KirillStolbov/remote_painting/assets/116667638/953b3fac-1c6c-4647-b0d7-6160c6234b7f)
 
-![alt text](https://github.com/KirillStolbov/remote_painting/main/docs/images/ios_client.jpg)
+![ios_client](https://github.com/KirillStolbov/remote_painting/assets/116667638/62839f5b-c40d-4197-8670-1dd9f7f736da)
 
-![alt text](https://github.com/KirillStolbov/remote_painting/main/docs/images/macos_server_1.png)
+![macos_server_1](https://github.com/KirillStolbov/remote_painting/assets/116667638/eec4b6df-4f7b-45b2-96d9-6876fbcc04d0)
 
-![alt text](https://github.com/KirillStolbov/remote_painting/main/docs/images/macos_server_2.png)
-
+![macos_server_2](https://github.com/KirillStolbov/remote_painting/assets/116667638/d92eab87-b130-47ad-8972-99ba55490cec)
