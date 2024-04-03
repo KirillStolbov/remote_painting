@@ -14,6 +14,10 @@ Server should enter his IP address (port will be selected automatically) to star
 
 ![macos_server_setup](https://github.com/KirillStolbov/remote_painting/assets/116667638/eab25fb3-0c67-4f50-9320-00616cbbc380)
 
+If everything is ok you will see this.
+
+![Screenshot 2024-04-03 at 15 12 04](https://github.com/KirillStolbov/remote_painting/assets/116667638/b2f1949c-6ac7-4256-b64c-65cea656796c)
+
 2. Desktop client setup
 
 Client should enter server IP address and port.
