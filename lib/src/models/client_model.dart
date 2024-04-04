@@ -1,7 +1,6 @@
 import 'dart:io';
-import 'dart:typed_data';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../utils/offset_codec.dart';
 import 'socket_model.dart';
@@ -11,7 +10,8 @@ final class ClientModel extends SocketModel<Socket, Uint8List> {
 
   final relativeOffsets = <Offset?>[];
 
-  Future<void> add(Offset? relative) async {
+
+  void add(Offset? relative) {
     socket.add(OffsetCodec.encode(relative));
     relativeOffsets.add(relative);
     notifyListeners();

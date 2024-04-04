@@ -17,21 +17,21 @@ class ChoiceScreen extends StatefulWidget {
 }
 
 class _ChoiceScreenState extends State<ChoiceScreen> {
-  final _bindIPController = TextEditingController(text: kDebugMode ? '172.20.10.6' : null);
+  final _serverBindIPController = TextEditingController(text: kDebugMode ? '172.20.10.6' : null);
   final _serverIPController = TextEditingController(text: kDebugMode ? '172.20.10.6' : null);
   final _serverPortController = TextEditingController();
 
   Future<void> _onContinueAsServerTap() async {
-    final listenIP = _bindIPController.text;
+    final serverBindIP = _serverBindIPController.text;
 
-    if (listenIP.isEmpty) return;
+    if (serverBindIP.isEmpty) return;
 
     try {
-      final socket = await ServerSocket.bind(listenIP, 0);
+      final socket = await ServerSocket.bind(serverBindIP, 0);
 
       if (mounted) context.read<AppConfiguration>().model = ServerModel(socket);
     } on Object catch (e, s) {
-      print('$e, $s');
+      debugPrint('$e, $s');
       if (mounted) showSnackBar(context, 'Failed to bind socket');
     }
   }
@@ -48,7 +48,7 @@ class _ChoiceScreenState extends State<ChoiceScreen> {
 
       if (mounted) context.read<AppConfiguration>().model = ClientModel(socket);
     } on Object catch (e, s) {
-      print('$e, $s');
+      debugPrint('$e, $s');
       if (mounted) showSnackBar(context, 'Failed to connect socket');
     }
   }
@@ -69,7 +69,7 @@ class _ChoiceScreenState extends State<ChoiceScreen> {
                     const SizedBox(height: 20),
 
                     TextField(
-                      controller: _bindIPController,
+                      controller: _serverBindIPController,
                       decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Server bind IP'),
                     ),
 
