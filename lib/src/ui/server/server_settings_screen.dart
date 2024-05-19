@@ -4,42 +4,22 @@ import 'package:provider/provider.dart';
 import '../../models/server_model.dart';
 import '../_widgets/client_canvas.dart';
 
-class ServerScreen extends StatelessWidget {
-  const ServerScreen(this.model, {super.key});
+class ServerSettingsScreen extends StatelessWidget {
+  const ServerSettingsScreen(this.model, {super.key});
 
   final ServerModel model;
 
   @override
   Widget build(BuildContext context) => ChangeNotifierProvider(
         create: (_) => model,
-        child: const Scaffold(
-          appBar: _AppBar(),
-          body: SafeArea(
+        child: Scaffold(
+          appBar: AppBar(title: const Text('Server Settings')),
+          body: const SafeArea(
             minimum: EdgeInsets.symmetric(horizontal: 16),
             child: _Clients(),
           ),
         ),
       );
-}
-
-class _AppBar extends StatelessWidget implements PreferredSizeWidget {
-  const _AppBar();
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kTextTabBarHeight);
-
-  @override
-  Widget build(BuildContext context) {
-    final style = Theme.of(context).textTheme.bodyLarge;
-    final model = context.read<ServerModel>();
-
-    return AppBar(
-      title: SelectableText(
-        'Server live at: ${model.address}',
-        style: style,
-      ),
-    );
-  }
 }
 
 class _Clients extends StatelessWidget {
@@ -64,7 +44,7 @@ class _Clients extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             //
-            Text('Client: ${client.address}'),
+            Text('Client: ${client.info}'),
 
             Expanded(
               child: ClientCanvas(

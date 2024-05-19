@@ -15,6 +15,8 @@ abstract final class OffsetCodec {
       byteData.setFloat64(8, _nullValue, Endian.little);
     }
 
+    print(byteData.buffer.asUint8List());
+
     return byteData.buffer.asUint8List();
   }
 

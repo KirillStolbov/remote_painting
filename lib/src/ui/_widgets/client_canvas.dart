@@ -15,9 +15,11 @@ class ClientCanvas extends StatelessWidget {
 
           return Listener(
             behavior: HitTestBehavior.opaque,
-            onPointerUp: (event) => model.add(null),
-            onPointerMove: (event) => model.add(event.localPosition.toRelative(size)),
-            onPointerDown: (event) => model.add(event.localPosition.toRelative(size)),
+            onPointerUp: (event) => model.addData(null),
+            onPointerMove: (event) =>
+                model.addData(event.localPosition.toRelative(size)),
+            onPointerDown: (event) =>
+                model.addData(event.localPosition.toRelative(size)),
             child: CustomPaint(painter: _Painter(model), size: size),
           );
         },
@@ -32,7 +34,10 @@ class _Painter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     canvas.clipRect(Offset.zero & size);
-    canvas.drawRect(Offset.zero & size, Paint()..color = const Color(0xFFF5F5DC));
+    canvas.drawRect(
+      Offset.zero & size,
+      Paint()..color = const Color(0xFFF5F5DC),
+    );
 
     final paint = Paint()
       ..color = Colors.black

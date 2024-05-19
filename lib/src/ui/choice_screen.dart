@@ -1,12 +1,12 @@
+import 'dart:developer';
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/client_model.dart';
 import '../models/server_model.dart';
-import '../router/configuration.dart';
+import '../router/router_state.dart';
+import '_widgets/content_constraints.dart';
 import '_widgets/snackBar.dart';
 
 class ChoiceScreen extends StatefulWidget {
@@ -17,94 +17,92 @@ class ChoiceScreen extends StatefulWidget {
 }
 
 class _ChoiceScreenState extends State<ChoiceScreen> {
-  final _serverBindIPController = TextEditingController(text: kDebugMode ? '172.20.10.6' : null);
-  final _serverIPController = TextEditingController(text: kDebugMode ? '172.20.10.6' : null);
-  final _serverPortController = TextEditingController();
-
-  Future<void> _onContinueAsServerTap() async {
-    final serverBindIP = _serverBindIPController.text;
-
-    if (serverBindIP.isEmpty) return;
-
+  Future<void> _onServerTap() async {
     try {
-      final socket = await ServerSocket.bind(serverBindIP, 0);
+      final socket = await ServerSocket.bind(InternetAddress.anyIPv6, 80);
 
-      if (mounted) context.read<AppConfiguration>().model = ServerModel(socket);
+      if (!mounted) return;
+
+      context.read<RouterState>().model = ServerModel(stream: socket);
     } on Object catch (e, s) {
-      debugPrint('$e, $s');
+      log('$e, $s');
       if (mounted) showSnackBar(context, 'Failed to bind socket');
     }
   }
 
-  Future<void> _onContinueAsClientTap() async {
-    final serverIP = _serverIPController.text;
-    final serverPort = int.tryParse(_serverPortController.text);
-
-    if (serverIP.isEmpty || serverPort == null) return;
-
-    try {
-      // ignore: close_sinks
-      final socket = await Socket.connect(serverIP, serverPort);
-
-      if (mounted) context.read<AppConfiguration>().model = ClientModel(socket);
-    } on Object catch (e, s) {
-      debugPrint('$e, $s');
-      if (mounted) showSnackBar(context, 'Failed to connect socket');
-    }
+  void _onClientTap() {
+    context.read<RouterState>().showClient = true;
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(title: const Text('Setup')),
         body: SafeArea(
           minimum: const EdgeInsets.symmetric(horizontal: 16),
-          child: Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 500),
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-                child: ListView(
-                  children: [
-                    //
-                    const SizedBox(height: 20),
+          child: ContentConstraints(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                //
 
-                    TextField(
-                      controller: _serverBindIPController,
-                      decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Server bind IP'),
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    ElevatedButton(
-                      onPressed: _onContinueAsServerTap,
-                      child: const Text('Continue as server'),
-                    ),
-
-                    const Divider(height: 60, thickness: 2),
-
-                    TextField(
-                      controller: _serverIPController,
-                      decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Server IP'),
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    TextField(
-                      controller: _serverPortController,
-                      decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Server port'),
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    ElevatedButton(
-                      onPressed: _onContinueAsClientTap,
-                      child: const Text('Continue as client'),
-                    ),
-                  ],
+                Text(
+                  'Choose how you want to proceed',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.titleLarge,
                 ),
-              ),
+
+                const Divider(height: 50, thickness: 2),
+
+                const SizedBox(height: 30),
+
+                _IconButton(
+                  icon: Icons.settings,
+                  onPressed: _onServerTap,
+                  caption: 'Continue as server',
+                ),
+
+                const SizedBox(height: 30),
+
+                _IconButton(
+                  icon: Icons.draw_rounded,
+                  onPressed: _onClientTap,
+                  caption: 'Continue as client',
+                ),
+              ],
             ),
           ),
+        ),
+      );
+}
+
+class _IconButton extends StatelessWidget {
+  const _IconButton({
+    required this.onPressed,
+    required this.icon,
+    required this.caption,
+  });
+
+  final void Function() onPressed;
+  final IconData icon;
+  final String caption;
+
+  @override
+  Widget build(BuildContext context) => IconButton.filledTonal(
+        padding: const EdgeInsets.symmetric(
+          vertical: 10,
+          horizontal: 48,
+        ),
+        onPressed: onPressed,
+        iconSize: 40,
+        icon: Column(
+          children: [
+            //
+            Icon(icon),
+
+            const SizedBox(height: 10),
+
+            Text(caption),
+          ],
         ),
       );
 }
