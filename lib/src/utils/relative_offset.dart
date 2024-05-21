@@ -1,6 +1,15 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
 extension RelativeOffsetExt on Offset {
-  Offset toRelative(Size size) => scale(1 / size.width, 1 / size.height);
-  Offset fromRelative(Size size) => scale(size.width, size.height);
+  Float64x2 toRelative(Size size) => Float64x2(
+        dx / size.width,
+        dy / size.height,
+      );
+      
+  Float64x2 fromRelative(Size size) => Float64x2(
+        dx * size.width,
+        dy * size.height,
+      );
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ContentConstraints extends StatelessWidget {
-  const ContentConstraints({
+class DesktopConstraints extends StatelessWidget {
+  const DesktopConstraints({
     required this.child,
     super.key,
   });

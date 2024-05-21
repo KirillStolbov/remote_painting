@@ -6,8 +6,8 @@ import 'package:provider/provider.dart';
 
 import '../models/server_model.dart';
 import '../router/router_state.dart';
+import '../utils/snackbar.dart';
 import '_widgets/content_constraints.dart';
-import '_widgets/snackBar.dart';
 
 class ChoiceScreen extends StatefulWidget {
   const ChoiceScreen({super.key});
@@ -39,7 +39,7 @@ class _ChoiceScreenState extends State<ChoiceScreen> {
         appBar: AppBar(title: const Text('Setup')),
         body: SafeArea(
           minimum: const EdgeInsets.symmetric(horizontal: 16),
-          child: ContentConstraints(
+          child: DesktopConstraints(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

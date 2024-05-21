@@ -7,8 +7,8 @@ import 'package:provider/provider.dart';
 
 import '../../models/client_model.dart';
 import '../../router/router_state.dart';
+import '../../utils/snackbar.dart';
 import '../_widgets/content_constraints.dart';
-import '../_widgets/snackBar.dart';
 
 class ClientSettingsScreen extends StatefulWidget {
   const ClientSettingsScreen({super.key});
@@ -44,7 +44,7 @@ class _ClientSettingsScreenState extends State<ClientSettingsScreen> {
         appBar: AppBar(title: const Text('Client Settings')),
         body: SafeArea(
           minimum: const EdgeInsets.symmetric(horizontal: 16),
-          child: ContentConstraints(
+          child: DesktopConstraints(
             child: ListView(
               children: [
                 //

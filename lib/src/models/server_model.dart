@@ -44,8 +44,8 @@ final class ServerModel extends StreamModel<ServerSocket, Socket> {
     notifyListeners();
   }
 
-  void _removeClient(ClientModel client) {
-    clients.remove(client);
-    notifyListeners();
-  }
+  // void _removeClient(ClientModel client) {
+  //   clients.remove(client);
+  //   notifyListeners();
+  // }
 }
