@@ -1,27 +1,32 @@
 import 'dart:collection';
+import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
 
 import '../entities/command.dart';
+import '../entities/draw_commands.dart';
 import 'stream_model.dart';
 
 final class ClientModel extends StreamModel<Socket, Uint8List> {
   ClientModel({required super.stream});
 
-  final _activeDrawCommands = Queue<DrawCommand>();
-  final _inactiveDrawCommands = Queue<DrawCommand>();
+  final Map<int, DrawCommands> _canvases = {};
 
-  Iterable<DrawCommand> get drawCommands => _activeDrawCommands;
+  Iterable<DrawCommand>? drawCommandsOf(int? canvasId) =>
+      _canvases[canvasId]?.active;
 
   @override
   String get info => '${stream.remoteAddress.address}:${stream.remotePort}';
 
   @override
   void onData(Uint8List data) {
-    // relativeOffsets.add(OffsetCodec.decode(data));
-    // _applyCommand(command);
-    // notifyListeners();
+    final string = String.fromCharCodes(data);
+    final command =
+        Command.fromJson(jsonDecode(string) as Map<String, Object?>);
+    _applyCommand(command);
+    notifyListeners();
   }
 
   @override
@@ -33,19 +38,43 @@ final class ClientModel extends StreamModel<Socket, Uint8List> {
   }
 
   void addCommand(Command command) {
-    // stream.add(OffsetCodec.encode(relative));
+    final string = jsonEncode(command);
+    stream.write(string);
     _applyCommand(command);
     notifyListeners();
   }
 
   void _applyCommand(Command command) {
-    switch (command) {
-      case DrawCommand():
-        _activeDrawCommands.add(command);
-      case UndoCommand():
-        _inactiveDrawCommands.addLast(_activeDrawCommands.removeLast());
-      case RedoCommand():
-        _activeDrawCommands.addLast(_inactiveDrawCommands.removeLast());
+    if (command is DrawCommand) {
+      final active = _canvases[command.canvasId]?.active;
+
+      if (active != null) {
+        active.add(command);
+      } else {
+        _canvases[command.canvasId] = DrawCommands(
+          active: Queue.from([command]),
+          inactive: Queue(),
+        );
+      }
+
+      return;
+    }
+
+    final active = _canvases[command.canvasId]?.active;
+    final inactive = _canvases[command.canvasId]?.inactive;
+
+    if (active == null || inactive == null) return;
+
+    if (command is UndoCommand && active.isNotEmpty) {
+      inactive.add(active.removeLast());
+
+      return;
+    }
+
+    if (command is RedoCommand && inactive.isNotEmpty) {
+      active.add(inactive.removeLast());
+
+      return;
     }
   }
 }

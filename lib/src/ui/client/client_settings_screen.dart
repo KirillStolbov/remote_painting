@@ -26,13 +26,14 @@ class _ClientSettingsScreenState extends State<ClientSettingsScreen> {
   Future<void> _onConnectTap() async {
     try {
       // ignore: close_sinks
-      final socket = await Socket.connect(_serverIPController.text, 80);
+      final socket = await Socket.connect(_serverIPController.text, 8096);
 
       // await socket.first;
 
       if (!mounted) return;
 
       context.read<RouterState>().model = ClientModel(stream: socket);
+      context.read<RouterState>().selectedCanvasId = 0;
     } on Object catch (e, s) {
       log('$e, $s');
       if (mounted) showSnackBar(context, 'Failed to connect socket');

@@ -9,17 +9,23 @@ import '../router/router_state.dart';
 import '../utils/snackbar.dart';
 import '_widgets/content_constraints.dart';
 
-class ChoiceScreen extends StatefulWidget {
-  const ChoiceScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
 
   @override
-  State<ChoiceScreen> createState() => _ChoiceScreenState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _ChoiceScreenState extends State<ChoiceScreen> {
+class _HomeScreenState extends State<HomeScreen> {
   Future<void> _onServerTap() async {
     try {
-      final socket = await ServerSocket.bind(InternetAddress.anyIPv6, 80);
+      final networkInterface = (await NetworkInterface.list())
+          .firstWhere((i) => i.name == (Platform.isIOS ? 'bridge100' : 'en0'));
+
+      final socket = await ServerSocket.bind(
+        networkInterface.addresses.first,
+        8096,
+      );
 
       if (!mounted) return;
 

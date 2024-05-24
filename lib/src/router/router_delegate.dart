@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../models/client_model.dart';
 import '../models/server_model.dart';
-import '../ui/choice_screen.dart';
 import '../ui/client/client_canvas_screen.dart';
 import '../ui/client/client_settings_screen.dart';
+import '../ui/home_screen.dart';
 import '../ui/server/server_settings_screen.dart';
 import '_pages/material_page.dart';
 import 'router_state.dart';
@@ -30,6 +30,7 @@ class AppRouterDelegate extends RouterDelegate<RouterState>
 
   @override
   Widget build(BuildContext context) {
+    final selectedCanvasId = _state.selectedCanvasId;
     final showClient = _state.showClient;
     final model = _state.model;
 
@@ -39,7 +40,7 @@ class AppRouterDelegate extends RouterDelegate<RouterState>
       clipBehavior: Clip.none,
       pages: <Page<void>>[
         //
-        asMaterialPage(const ChoiceScreen(), 'ChoiceScreen'),
+        asMaterialPage(const HomeScreen(), 'HomeScreen'),
 
         if (model is ServerModel)
           asMaterialPage(ServerSettingsScreen(model), 'ServerSettingsScreen'),
@@ -48,8 +49,14 @@ class AppRouterDelegate extends RouterDelegate<RouterState>
           //
           asMaterialPage(const ClientSettingsScreen(), 'ClientSettingsScreen'),
 
-          if (model is ClientModel)
-            asMaterialPage(ClientCanvasScreen(model), 'ClientCanvasScreen'),
+          if (model is ClientModel && selectedCanvasId != null)
+            asMaterialPage(
+              ClientCanvasScreen(
+                model: model,
+                canvasId: selectedCanvasId,
+              ),
+              'ClientCanvasScreen',
+            ),
         ],
       ],
     );

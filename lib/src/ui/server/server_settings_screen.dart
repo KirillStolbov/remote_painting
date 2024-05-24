@@ -13,7 +13,7 @@ class ServerSettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) => ChangeNotifierProvider(
         create: (_) => model,
         child: Scaffold(
-          appBar: AppBar(title: const Text('Server Settings')),
+          appBar: AppBar(title: Text('Server live at: ${model.info}')),
           body: const SafeArea(
             minimum: EdgeInsets.symmetric(horizontal: 16),
             child: _Clients(),
@@ -49,6 +49,7 @@ class _Clients extends StatelessWidget {
             Expanded(
               child: ClientCanvas(
                 model: model.clients[index],
+                localDrawCommand: null,
               ),
             ),
           ],

@@ -14,10 +14,18 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) => ChangeNotifierProvider(
         create: (_) => _routerState,
         child: MaterialApp.router(
-          title: 'Remote Painting 72',
+          title: 'Remote Painting',
           routerDelegate: _routerDelegate,
           debugShowCheckedModeBanner: false,
-          theme: ThemeData(colorSchemeSeed: Colors.blue),
+          theme: ThemeData(
+            colorSchemeSeed: Colors.blue,
+            appBarTheme: const AppBarTheme(
+              titleTextStyle: TextStyle(
+                color: Colors.black,
+                fontSize: 16,
+              ),
+            ),
+          ),
         ),
       );
 }

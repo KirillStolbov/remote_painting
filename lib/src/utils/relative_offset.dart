@@ -7,9 +7,4 @@ extension RelativeOffsetExt on Offset {
         dx / size.width,
         dy / size.height,
       );
-      
-  Float64x2 fromRelative(Size size) => Float64x2(
-        dx * size.width,
-        dy * size.height,
-      );
 }
