@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
 
+import '../models/client_model.dart';
 import '../models/stream_model.dart';
 
 final class RouterState extends ChangeNotifier {
   bool _showClientSettings = false;
-  bool get showClient => _showClientSettings;
-  set showClient(bool showClientSettings) {
+  bool get showClientSettings => _showClientSettings;
+  set showClientSettings(bool showClientSettings) {
     if (_showClientSettings == showClientSettings) return;
 
     _showClientSettings = showClientSettings;
     notifyListeners();
   }
 
-  StreamModel? _model;
-  StreamModel? get model => _model;
-  set model(StreamModel? model) {
-    _model = model;
+  StreamModel? _streamModel;
+  StreamModel? get streamModel => _streamModel;
+  set streamModel(StreamModel? streamModel) {
+    if (_streamModel == streamModel) return;
+
+    _streamModel = streamModel;
     notifyListeners();
 
-    if (_showClientSettings) {
-      _model?.onDoneCallback = () => this.model = null;
+    if (streamModel is ClientModel) {
+      _streamModel?.onDoneCallback = () => this.streamModel = null;
     }
   }
 
@@ -29,6 +32,15 @@ final class RouterState extends ChangeNotifier {
     if (_selectedCanvasId == selectedCanvasId) return;
 
     _selectedCanvasId = selectedCanvasId;
+    notifyListeners();
+  }
+
+  ClientModel? _selectedClientModel;
+  ClientModel? get selectedClientModel => _selectedClientModel;
+  set selectedClientModel(ClientModel? selectedClientModel) {
+    if (_selectedClientModel == selectedClientModel) return;
+
+    _selectedClientModel = selectedClientModel;
     notifyListeners();
   }
 }

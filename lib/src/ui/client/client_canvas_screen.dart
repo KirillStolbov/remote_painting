@@ -7,13 +7,13 @@ import '../_widgets/client_canvas.dart';
 
 class ClientCanvasScreen extends StatefulWidget {
   const ClientCanvasScreen({
-    required this.model,
+    required this.clientModel,
     required this.canvasId,
     super.key,
   });
 
   final int canvasId;
-  final ClientModel model;
+  final ClientModel clientModel;
 
   @override
   State<ClientCanvasScreen> createState() => _ClientCanvasScreenState();
@@ -33,30 +33,41 @@ class _ClientCanvasScreenState extends State<ClientCanvasScreen> {
   }
 
   @override
-  Widget build(BuildContext context) => ChangeNotifierProvider(
-        create: (_) => widget.model,
+  Widget build(BuildContext context) => ChangeNotifierProvider.value(
+        value: widget.clientModel,
         child: Scaffold(
-          appBar: AppBar(
-            title: const Text('Client Canvas'),
-            actions: [
-              IconButton(
-                onPressed: () => widget.model.addCommand(
-                  RedoCommand(canvasId: widget.canvasId),
+          appBar: AppBar(title: const Text('Client Canvas')),
+          endDrawerEnableOpenDragGesture: true,
+          endDrawer: Drawer(
+            child: ListView(
+              padding: const EdgeInsets.all(12),
+              children: [
+                //
+                Text(
+                  'Menu',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
-                icon: const Icon(Icons.undo_rounded),
-              ),
-              IconButton(
-                onPressed: () => widget.model.addCommand(
-                  UndoCommand(canvasId: widget.canvasId),
+
+                IconButton(
+                  onPressed: () => widget.clientModel.addCommand(
+                    UndoCommand(canvasId: widget.canvasId),
+                  ),
+                  icon: const Icon(Icons.undo_rounded),
                 ),
-                icon: const Icon(Icons.redo_rounded),
-              ),
-            ],
+                IconButton(
+                  onPressed: () => widget.clientModel.addCommand(
+                    RedoCommand(canvasId: widget.canvasId),
+                  ),
+                  icon: const Icon(Icons.redo_rounded),
+                ),
+              ],
+            ),
           ),
           body: SafeArea(
             child: ClientCanvas(
-              model: widget.model,
               localDrawCommand: _localDrawCommand,
+              canvasId: widget.canvasId,
             ),
           ),
         ),

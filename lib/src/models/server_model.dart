@@ -4,48 +4,43 @@ import 'client_model.dart';
 import 'stream_model.dart';
 
 final class ServerModel extends StreamModel<ServerSocket, Socket> {
-  ServerModel({required super.stream});
+  ServerModel({required super.stream}) : ip = stream.address.address;
 
-  final clients = <ClientModel>[];
+  final String ip;
 
-  @override
-  String get info => '${stream.address.address}:${stream.port}';
+  final Map<String, ClientModel> _clientModelByIp = {};
+
+  List<ClientModel> get clientModels => _clientModelByIp.values.toList();
 
   @override
   void onData(Socket data) {
-    // final old = clients.indexWhere(test);
+    final clientModel = _clientModelByIp.update(
+      data.address.address,
+      (clientModel) => clientModel..initialize(data),
+      ifAbsent: () => ClientModel(stream: data),
+    );
 
-    // if (old != null) {
-    //   old.initialize(data);
+    clientModel.syncCanvases();
 
-    //   return;
-    // }
-
-    final client = ClientModel(stream: data);
-
-    _addClient(client);
+    notifyListeners();
   }
 
   @override
   void onDone() {
-    final clients = List.of(this.clients);
+    super.onDone();
 
-    for (final client in clients) {
+    for (final client in _clientModelByIp.values) {
       // ignore: discarded_futures
       client.onDone();
     }
     // ignore: discarded_futures
     stream.close();
-    super.onDone();
   }
 
-  void _addClient(ClientModel client) {
-    clients.add(client);
+  void removeClient(String clientIp) {
+    final clientModel = _clientModelByIp.remove(clientIp);
+    // ignore: discarded_futures
+    clientModel?.onDone();
     notifyListeners();
   }
-
-  // void _removeClient(ClientModel client) {
-  //   clients.remove(client);
-  //   notifyListeners();
-  // }
 }

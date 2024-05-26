@@ -18,22 +18,17 @@ class ClientSettingsScreen extends StatefulWidget {
 }
 
 class _ClientSettingsScreenState extends State<ClientSettingsScreen> {
-  List<Object>? _canvases;
-
   final _serverIPController =
-      TextEditingController(text: kDebugMode ? '172.20.10.6' : null);
+      TextEditingController(text: kDebugMode ? '127.0.0.1' : null);
 
   Future<void> _onConnectTap() async {
     try {
       // ignore: close_sinks
       final socket = await Socket.connect(_serverIPController.text, 8096);
 
-      // await socket.first;
-
       if (!mounted) return;
 
-      context.read<RouterState>().model = ClientModel(stream: socket);
-      context.read<RouterState>().selectedCanvasId = 0;
+      context.read<RouterState>().streamModel = ClientModel(stream: socket);
     } on Object catch (e, s) {
       log('$e, $s');
       if (mounted) showSnackBar(context, 'Failed to connect socket');
@@ -66,16 +61,6 @@ class _ClientSettingsScreenState extends State<ClientSettingsScreen> {
                   label: const Text('Connect'),
                   icon: const Icon(Icons.refresh),
                 ),
-
-                if (_canvases != null) ...[
-                  //
-                  const SizedBox(height: 30),
-
-                  Text(
-                    'Canvases',
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                ],
               ],
             ),
           ),

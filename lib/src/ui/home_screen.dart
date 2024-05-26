@@ -19,8 +19,13 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   Future<void> _onServerTap() async {
     try {
-      final networkInterface = (await NetworkInterface.list())
-          .firstWhere((i) => i.name == (Platform.isIOS ? 'bridge100' : 'en0'));
+      final networkInterfaces =
+          await NetworkInterface.list(includeLoopback: true);
+
+      final networkInterface = networkInterfaces.firstWhere(
+        (i) => i.name == (Platform.isIOS ? 'bridge100' : 'en0'),
+        orElse: () => networkInterfaces.firstWhere((i) => i.name == 'lo0'),
+      );
 
       final socket = await ServerSocket.bind(
         networkInterface.addresses.first,
@@ -29,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
       if (!mounted) return;
 
-      context.read<RouterState>().model = ServerModel(stream: socket);
+      context.read<RouterState>().streamModel = ServerModel(stream: socket);
     } on Object catch (e, s) {
       log('$e, $s');
       if (mounted) showSnackBar(context, 'Failed to bind socket');
@@ -37,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _onClientTap() {
-    context.read<RouterState>().showClient = true;
+    context.read<RouterState>().showClientSettings = true;
   }
 
   @override
@@ -50,7 +55,6 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 //
-
                 Text(
                   'Choose how you want to proceed',
                   textAlign: TextAlign.center,
