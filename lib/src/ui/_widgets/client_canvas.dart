@@ -41,10 +41,7 @@ class ClientCanvas extends StatelessWidget {
           child: Listener(
             behavior: HitTestBehavior.opaque,
             onPointerDown: (event) {
-              localDrawCommand
-                ..color = Colors.black
-                ..strokeWidth = 2
-                ..addPoint(event.localPosition.toRelative(size));
+              localDrawCommand.addPoint(event.localPosition.toRelative(size));
             },
             onPointerMove: (event) {
               localDrawCommand.addPoint(event.localPosition.toRelative(size));
@@ -82,8 +79,7 @@ class _CanvasPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint();
-    final mainPath = Path();
-    final subPath = Path();
+    final path = Path();
 
     canvas
       ..clipRect(Offset.zero & size)
@@ -93,29 +89,21 @@ class _CanvasPainter extends CustomPainter {
       ...?clientModel.drawCommandsOf(canvasId),
       if (localDrawCommand != null) localDrawCommand!,
     ]) {
+      for (final (i, point) in command.points.indexed) {
+        if (i == 0) path.moveTo(point.x * size.width, point.y * size.height);
+        path.lineTo(point.x * size.width, point.y * size.height);
+        path.moveTo(point.x * size.width, point.y * size.height);
+      }
+
       paint
-        ..color = command.color
+        ..color = command.tool == DrawTool.eraser ? _canvasColor : command.color
         ..strokeWidth = command.strokeWidth
         ..strokeCap = StrokeCap.round
         ..style = PaintingStyle.stroke;
 
-      final firstPoint = command.points.firstOrNull;
-
-      if (firstPoint != null) {
-        subPath.moveTo(firstPoint.x * size.width, firstPoint.y * size.height);
-      }
-
-      for (final point in command.points) {
-        subPath.lineTo(point.x * size.width, point.y * size.height);
-        subPath.moveTo(point.x * size.width, point.y * size.height);
-      }
-
-      mainPath.addPath(subPath, Offset.zero);
-      subPath.reset();
+      canvas.drawPath(path, paint);
+      path.reset();
     }
-
-    canvas.drawPath(mainPath, paint);
-    mainPath.reset();
   }
 
   @override

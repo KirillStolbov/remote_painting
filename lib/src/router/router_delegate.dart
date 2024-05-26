@@ -78,6 +78,7 @@ class AppRouterDelegate extends RouterDelegate<RouterState>
                 canvasId: selectedCanvasId,
               ),
               'ClientCanvasScreen',
+              true,
             ),
         ],
       ],

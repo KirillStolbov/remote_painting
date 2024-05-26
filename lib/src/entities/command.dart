@@ -17,6 +17,8 @@ sealed class Command {
       1 => RemoteDrawCommand.fromJson(json),
       2 => UndoCommand.fromJson(json),
       3 => RedoCommand.fromJson(json),
+      4 => ClearCanvasCommand.fromJson(json),
+      5 => RemoveCanvasCommand.fromJson(json),
       _ => throw ArgumentError.value(
           type,
           'Command.fromType',
@@ -34,14 +36,18 @@ sealed class Command {
       };
 }
 
+enum DrawTool { pen, eraser }
+
 abstract base class DrawCommand extends Command {
   DrawCommand({
     required super.canvasId,
     required this.color,
+    required this.tool,
     required this.strokeWidth,
   }) : super(type: 1);
 
   Color color;
+  DrawTool tool;
   double strokeWidth;
   Iterable<Float64x2> get points;
 }
@@ -51,6 +57,7 @@ final class RemoteDrawCommand extends DrawCommand {
     required super.canvasId,
     required this.points,
     required super.color,
+    required super.tool,
     required super.strokeWidth,
   });
 
@@ -61,6 +68,7 @@ final class RemoteDrawCommand extends DrawCommand {
       canvasId: json['canvasId'] as int,
       points: points.toFloat64x2List(),
       color: Color(json['color'] as int),
+      tool: DrawTool.values[json['tool'] as int],
       strokeWidth: json['strokeWidth'] as double,
     );
   }
@@ -74,6 +82,7 @@ final class RemoteDrawCommand extends DrawCommand {
         'canvasId': canvasId,
         'points': points.toListDouble(),
         'color': color.value,
+        'tool': tool.index,
         'strokeWidth': strokeWidth,
       };
 }
@@ -82,6 +91,7 @@ final class LocalDrawCommand extends DrawCommand with ChangeNotifier {
   LocalDrawCommand({
     required super.canvasId,
     required super.color,
+    required super.tool,
     required super.strokeWidth,
   }) : points = [];
 
@@ -97,6 +107,7 @@ final class LocalDrawCommand extends DrawCommand with ChangeNotifier {
         canvasId: canvasId,
         points: Float64x2List.fromList(points),
         color: color,
+        tool: tool,
         strokeWidth: strokeWidth,
       );
 }
@@ -113,6 +124,24 @@ final class RedoCommand extends Command {
   const RedoCommand({required super.canvasId}) : super(type: 3);
 
   factory RedoCommand.fromJson(Map<String, Object?> json) => RedoCommand(
+        canvasId: json['canvasId'] as int,
+      );
+}
+
+final class ClearCanvasCommand extends Command {
+  const ClearCanvasCommand({required super.canvasId}) : super(type: 4);
+
+  factory ClearCanvasCommand.fromJson(Map<String, Object?> json) =>
+      ClearCanvasCommand(
+        canvasId: json['canvasId'] as int,
+      );
+}
+
+final class RemoveCanvasCommand extends Command {
+  const RemoveCanvasCommand({required super.canvasId}) : super(type: 5);
+
+  factory RemoveCanvasCommand.fromJson(Map<String, Object?> json) =>
+      RemoveCanvasCommand(
         canvasId: json['canvasId'] as int,
       );
 }

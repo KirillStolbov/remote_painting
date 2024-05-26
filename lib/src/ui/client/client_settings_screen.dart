@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import '../../models/client_model.dart';
 import '../../router/router_state.dart';
 import '../../utils/snackbar.dart';
-import '../_widgets/content_constraints.dart';
+import '../_widgets/desktop_constraints.dart';
 
 class ClientSettingsScreen extends StatefulWidget {
   const ClientSettingsScreen({super.key});

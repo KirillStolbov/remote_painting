@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import '../../models/client_model.dart';
 import '../../models/server_model.dart';
 import '../../router/router_state.dart';
-import '../_widgets/content_constraints.dart';
+import '../_widgets/desktop_constraints.dart';
 
 class ServerSettingsScreen extends StatelessWidget {
   const ServerSettingsScreen(this.serverModel, {super.key});

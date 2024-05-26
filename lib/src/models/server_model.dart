@@ -14,13 +14,13 @@ final class ServerModel extends StreamModel<ServerSocket, Socket> {
 
   @override
   void onData(Socket data) {
-    final clientModel = _clientModelByIp.update(
+    _clientModelByIp.update(
       data.address.address,
-      (clientModel) => clientModel..initialize(data),
+      (clientModel) => clientModel
+        ..initialize(data)
+        ..syncCanvases(),
       ifAbsent: () => ClientModel(stream: data),
     );
-
-    clientModel.syncCanvases();
 
     notifyListeners();
   }

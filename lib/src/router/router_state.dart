@@ -23,6 +23,7 @@ final class RouterState extends ChangeNotifier {
 
     if (streamModel is ClientModel) {
       _streamModel?.onDoneCallback = () => this.streamModel = null;
+      _selectedCanvasId = null;
     }
   }
 

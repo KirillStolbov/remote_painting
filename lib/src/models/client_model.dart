@@ -75,10 +75,16 @@ final class ClientModel extends StreamModel<Socket, Uint8List> {
   }
 
   void _applyCommand(Command command) {
-    final canvas = canvases.elementAtOrNull(command.canvasId);
+    DrawCanvas? targetCanvas;
+
+    for (final canvas in canvases) {
+      if (canvas.id == command.canvasId) {
+        targetCanvas = canvas;
+      }
+    }
 
     if (command is DrawCommand) {
-      if (canvas == null) {
+      if (targetCanvas == null) {
         canvases.add(
           DrawCanvas.active(
             id: command.canvasId,
@@ -86,16 +92,29 @@ final class ClientModel extends StreamModel<Socket, Uint8List> {
           ),
         );
       } else {
-        canvas.active.add(command);
+        targetCanvas.active.add(command);
       }
 
       return;
     }
 
-    if (canvas == null) return;
+    if (targetCanvas == null) return;
 
-    final active = canvas.active;
-    final inactive = canvas.inactive;
+    if (command is ClearCanvasCommand) {
+      targetCanvas.active.clear();
+      targetCanvas.inactive.clear();
+
+      return;
+    }
+
+    if (command is RemoveCanvasCommand) {
+      canvases.removeWhere((canvas) => canvas.id == command.canvasId);
+
+      return;
+    }
+
+    final active = targetCanvas.active;
+    final inactive = targetCanvas.inactive;
 
     if (command is UndoCommand && active.isNotEmpty) {
       inactive.add(active.removeLast());

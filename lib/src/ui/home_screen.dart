@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 import '../models/server_model.dart';
 import '../router/router_state.dart';
 import '../utils/snackbar.dart';
-import '_widgets/content_constraints.dart';
+import '_widgets/desktop_constraints.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
