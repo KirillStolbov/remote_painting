@@ -23,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
           await NetworkInterface.list(includeLoopback: true);
 
       final networkInterface = networkInterfaces.firstWhere(
-        (i) => i.name == (Platform.isIOS ? 'bridge100' : 'en0'),
+        (i) => {'en0', 'bridge100'}.contains(i.name),
         orElse: () => networkInterfaces.firstWhere((i) => i.name == 'lo0'),
       );
 
